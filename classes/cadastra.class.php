@@ -22,7 +22,7 @@ class Cadastrar
         }
     }
 
-    protected function adicionarUser($array)
+    public function adicionarUser($array)
     {
         $stmt = $this->db->prepare('INSERT INTO conta (chave, nome, apelido, genero, dia_nascimento, mes_nascimento, ano_nascimento, telefone, email, palavra_passe, dia_entrada, mes_entrada, ano_entrada, codigo_renova, pais, provincia, municipio, bairro_rua) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt -> bindValue(1, chaveDB());
