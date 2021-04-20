@@ -1,6 +1,7 @@
 <?php
 include("classes/cadastra.class.php");
 include("classes/entra.class.php");
+include("classes/cript.class.php");
 
 $cadastro = new Cadastrar(conexao()); 
 
@@ -10,8 +11,20 @@ if(isset($_POST['json'])){
     $adicionar = $cadastro->adicionarUser($array);
 
     if($adicionar){
-        $entrar = new Entrar(conexao());
-        $credencial = $entrar->verificaCredencial($array['email'], $array['password']);
+        $entra = new Entrar(conexao());
+        $entrar = $entra->verificaCredencial($array['email'], $array['password']);
+        if($entrar){
+
+            $cript = new criptografia();
+            $chave_sms_real = $cript->fazChave();
+            $chave_sms = $cript->criptChave($chave_sms_real);
+
+            $sms = $cript->encrypt($entrar ,$chave_sms_real);
+
+            $res = array($sms, $chave_sms);
+            echo json_encode($res);
+
+        }
     }else{
 
     }

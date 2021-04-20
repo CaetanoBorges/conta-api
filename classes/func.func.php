@@ -1,18 +1,17 @@
 <?php
 function valid($token){
-    $token = explode(".",$token);
+    $token = json_decode($token);
 
     $sms = $token[0];
-    $chave = $token[1];
+    $chave_ = $token[1];
     $cript = new criptografia();
-    $chave = $cript->decriptChave($chave);
+    $chave = $cript->decriptChave($chave_);
     $res = $cript->decrypt($sms, $chave);
 
-    $r = (array) json_decode($res);
-    if(count($r) > 1){
-        return $r;
+    if(isset($res)){
+        return $res;
     }else{
-        return "Erro, token inválido!";
+        return false;
     }
     
 

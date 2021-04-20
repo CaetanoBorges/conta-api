@@ -9,6 +9,7 @@ class Entrar
        $this->db = $pdo;
     }
 
+    //FUNÇÃO PARA OBTER TOKEN
     public function verificaCredencial($email, $password)
     {
         $stmt = $this->db->prepare('SELECT chave FROM conta WHERE email = ? AND palavra_passe = ? ');
