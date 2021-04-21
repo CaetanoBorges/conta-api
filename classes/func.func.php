@@ -37,7 +37,7 @@ function conexao(){
 }
 
 
-function enviaNumeroDeRecuperacao($mail, $numero){
+function enviaNumeroDeRecuperacao($mail, $numero, $email){
 
     $corpo=`
 
@@ -58,7 +58,7 @@ function enviaNumeroDeRecuperacao($mail, $numero){
         //Recipients
         $mail->setFrom("debliw.ao@gmail.com", "www.com");
         //$mail->addAddress('joe@example.net', 'Joe User');     // Add a recipient
-        $mail->addAddress($email_cliente);   // Name is optional
+        $mail->addAddress($email);   // Name is optional
         //$mail->addReplyTo('info@example.com', 'Information');
         //$mail->addCC('cc@example.com');
         //$mail->addBCC('bcc@example.com');
@@ -76,6 +76,6 @@ function enviaNumeroDeRecuperacao($mail, $numero){
         $mail->send();
         return true;
     } catch (Exception $e) {
-        return $mail->ErrorInfo;
+        return false; //$mail->ErrorInfo;
     }
 }

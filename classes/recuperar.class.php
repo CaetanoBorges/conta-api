@@ -1,5 +1,4 @@
 <?php
-<?php
 include("func.func.php");
 class Recuperar
 {
