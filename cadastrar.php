@@ -1,42 +1,63 @@
 <?php
-include("classes/cadastra.class.php");
-include("classes/entra.class.php");
-include("classes/cript.class.php");
+if(isset($_POST["json"])){
+    include("classes/cript.class.php");
+    include("classes/cadastra.class.php");
+    include("classes/db.php");
 
-$cadastro = new Cadastrar(conexao()); 
+    $conexao = conexao();
+    $json = $_POST["json"];
+    $array = (array) json_decode($json);
+    /* ARRAY FIELDS
+    $array['nome'] = $_POST['nome'];
+    $array['email'] = $_POST['email'];
+    $array['apelido'] = $_POST['apelido'];
+    $array['dia'] = $_POST['dia'];
+    $array['mes'] = $_POST['mes'];
+    $array['ano'] = $_POST['ano'];
+    $array['palavra_passe'] = $_POST['palavra_passe'];
+    $array['genero'] = $_POST['genero'];
+    $array['telefone'] = $_POST['telefone'];
+    */
+    #var_dump($array);
+    $init = new Cadastrar($conexao,$array);
+    
 
-if(isset($_POST['json'])){
+    if($init->cadastrar()){
+        include("classes/entra.class.php");
 
-    $array = json_decode($_POST['json']);
-    $adicionar = $cadastro->adicionarUser($array);
+        $init = new Entrar($conexao, $array['email'], $array['palavra_passe']);
+        if($init->login()){
+            $credencial['user']=$init->getUser();
+            $credencial['email']=$init->getEmail();
 
-    if($adicionar){
-        $entra = new Entrar(conexao());
-        $entrar = $entra->verificaCredencial($array['email'], $array['password']);
-        if($entrar){
-
+            $credencial = json_encode($credencial);
+            
             $cript = new criptografia();
             $chave_sms_real = $cript->fazChave();
             $chave_sms = $cript->criptChave($chave_sms_real);
 
-            $sms = $cript->encrypt($entrar ,$chave_sms_real);
+            $sms = $cript->encrypt($credencial,$chave_sms_real);
 
-            $res = array($sms, $chave_sms);
-            echo json_encode($res);
+            $return['payload'] = $sms.'.'.$chave_sms;
+            $return['ok'] = true;
 
+            echo json_encode($return);
+
+            //echo $sms.'.'.$chave_sms;
+        }else{
+            $return['payload'] = "Erro, credenciais errados";
+            $return['ok'] = false;
+
+            echo json_encode($return);
         }
+
     }else{
+        $return['payload'] = "Erro, já existe um usuário com esse email";
+        $return['ok'] = false;
 
+        echo json_encode($return);
     }
-
-}else if(isset($_POST['email'])){
-
-    $verificar = $cadastro->verificaEmail($_POST['email']);
-
-    if($verificar){
-        echo 'Sim';
-    }else{
-        echo 'Nao';
-    }
+    
+}else{
 
 }

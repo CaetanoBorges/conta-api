@@ -71,3 +71,13 @@ class criptografia{
 
 }
 
+function chaveDB(){
+    return uniqid();
+}
+
+function data(){
+    $data['dia'] = date('d');
+    $data['mes'] = date('m');
+    $data['ano'] = date('y');
+    return $data;
+}

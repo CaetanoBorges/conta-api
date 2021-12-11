@@ -2,29 +2,50 @@
 
 class Entrar
 {
+    protected $email;    
+    protected $password; 
+
     protected $db;       
+    protected $user;     
 
-    public function __construct($pdo)
+    public function __construct($db, $email, $password) 
     {
-       $this->db = $pdo;
+       $this->db = $db;
+       $this->email = $email;
+       $this->password = hash("sha512",$password);
     }
 
-    //FUNÇÃO PARA OBTER TOKEN
-    public function verificaCredencial($email, $password)
+    public function login()
     {
-        $stmt = $this->db->prepare('SELECT chave FROM conta WHERE email = ? AND palavra_passe = ? ');
-        $stmt -> bindValue(1, $email);
-        $stmt -> bindValue(2, hash("sha512",$password));
-        $stmt ->execute();
-        $chave = $stmt->fetch();
-
-        $res = $chave['chave'];
-        if(isset($res) AND !empty($res)){
-            return $res;
-        }else{
-            return false;
+        $user = $this->_checkCredentials();
+        if ($user) {
+            return $user;
         }
-
+        return false;
     }
 
+    protected function _checkCredentials()
+    {
+        $stmt = $this->db->prepare('SELECT * FROM conta WHERE email = ? AND palavra_passe = ? ');
+        $stmt -> bindValue(1, $this->email);
+        $stmt -> bindValue(2, $this->password);
+        $stmt ->execute();
+        $user = $stmt->fetch();
+        if($user){
+            if (count($user) > 1) {
+                $this->user = $user;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getUser()
+    {
+        return $this->user['chave'];
+    }
+    public function getEmail()
+    {
+        return $this->user['email'];
+    }
 }
