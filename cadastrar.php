@@ -1,11 +1,11 @@
 <?php
-if(isset($_POST["json"])){
+if(isset($_GET["json"])){
     include("classes/cript.class.php");
     include("classes/cadastra.class.php");
     include("classes/db.php");
 
     $conexao = conexao();
-    $json = $_POST["json"];
+    $json = $_GET["json"];
     $array = (array) json_decode($json);
     /* ARRAY FIELDS
     $array['nome'] = $_POST['nome'];
