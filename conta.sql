@@ -3,14 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 19-Abr-2021 às 14:33
+-- Tempo de geração: 17-Dez-2021 às 15:55
 -- Versão do servidor: 10.4.10-MariaDB
 -- versão do PHP: 7.1.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
-SET time_zone = "+01:00";
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -47,8 +47,16 @@ CREATE TABLE `conta` (
   `pais` varchar(50) NOT NULL,
   `provincia` varchar(50) NOT NULL,
   `municipio` varchar(50) NOT NULL,
-  `bairro_rua` text NOT NULL
+  `bairro_rua` text NOT NULL,
+  `foto` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `conta`
+--
+
+INSERT INTO `conta` (`id`, `chave`, `nome`, `apelido`, `genero`, `dia_nascimento`, `mes_nascimento`, `ano_nascimento`, `telefone`, `email`, `palavra_passe`, `dia_entrada`, `mes_entrada`, `ano_entrada`, `codigo_renova`, `pais`, `provincia`, `municipio`, `bairro_rua`, `foto`) VALUES
+(1, '61b7450c4f96e', 'Caetano', 'Wambembe', 'M', 15, 8, 1996, '921797626', 'cmcaetanoborges@gmail.com', 'f7ebbd8bfdd4face91eae94386ec3be00394b4bf748dc507bfb126c0e13286f62093f4a564a2aa06bd4a886f48aa75917626a07dede80a5192dfa53429437194', 13, 12, 2021, 0, '', 'Huíla', 'Lubango', 'Casa Verde', 'PicsArt_1419676045998.jpg');
 
 --
 -- Índices para tabelas despejadas
@@ -68,7 +76,7 @@ ALTER TABLE `conta`
 -- AUTO_INCREMENT de tabela `conta`
 --
 ALTER TABLE `conta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
