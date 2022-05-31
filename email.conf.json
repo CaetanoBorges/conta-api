@@ -1,0 +1,8 @@
+{
+    "usuario": "naoresponder@binga.ao",
+    "servidor": "mail.binga.ao",
+    "palavra_passe": "qwertyazerty2022",
+    "seguranca": "ssl",
+    "porta": 465,
+    "nome": "Binga"
+}

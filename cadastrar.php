@@ -1,11 +1,17 @@
 <?php
-if(isset($_GET["json"])){
+use PHPMailer\PHPMailer\PHPMailer;
+//Load Composer's autoloader
+require '../vendor/autoload.php';
+
+
+if(isset($_POST["json"])){
+    
     include("classes/cript.class.php");
     include("classes/cadastra.class.php");
     include("classes/db.php");
 
     $conexao = conexao();
-    $json = $_GET["json"];
+    $json = $_POST["json"];
     $array = (array) json_decode($json);
     /* ARRAY FIELDS
     $array['nome'] = $_POST['nome'];
@@ -27,6 +33,14 @@ if(isset($_GET["json"])){
 
         $init = new Entrar($conexao, $array['email'], $array['palavra_passe']);
         if($init->login()){
+            require('classes/email.func.php');
+            $mailer = new PHPMailer(true);
+            $copy = '&copy;';
+            $corp = file_get_contents("emailTemplates/boasVindas.html");
+            $corpo=str_replace("--COPYRIGHT--",$copy." ".date("Y"),$corp);
+            $enviar = enviaEmail($mailer, $array['email'], "Seja benvindo/a, Binga.", $corpo);
+
+
             $credencial['user']=$init->getUser();
             $credencial['email']=$init->getEmail();
 
@@ -41,7 +55,11 @@ if(isset($_GET["json"])){
             $return['payload'] = $sms.'.'.$chave_sms;
             $return['ok'] = true;
 
+
+
             echo json_encode($return);
+
+            
 
             //echo $sms.'.'.$chave_sms;
         }else{
