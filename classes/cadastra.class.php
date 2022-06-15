@@ -25,6 +25,15 @@ class Cadastrar
         
     }
 
+    public function verificaEmail(){
+        $user = $this->_checkEmail();
+        if ($user) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function cadastrar()
     {
         $user = $this->_checkEmail();
