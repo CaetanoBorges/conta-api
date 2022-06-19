@@ -6,11 +6,13 @@ class Cadastrar
 {
     protected $db;       
     protected $array;
+    protected $funcoes;
 
-    public function __construct($db, $array) 
+    public function __construct($db, $array, $funcoes) 
     {
         $this->db = $db;
         $this->array = $array;
+        $this->funcoes = $funcoes;
     }
 
     protected function _checkEmail()
@@ -52,7 +54,7 @@ class Cadastrar
     public function novoUser($array)
     {
         $stmt = $this->db->prepare('INSERT INTO conta (chave, nome, apelido, genero, dia_nascimento, mes_nascimento, ano_nascimento, telefone, email, palavra_passe, dia_entrada, mes_entrada, ano_entrada, codigo_renova, pais, provincia, municipio, bairro_rua, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt -> bindValue(1, chaveDB());
+        $stmt -> bindValue(1, $this->funcoes::chaveDB());
         $stmt -> bindValue(2, $array['nome']);
         $stmt -> bindValue(3, $array['apelido']);
         $stmt -> bindValue(4, $array['genero']);

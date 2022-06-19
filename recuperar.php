@@ -2,7 +2,11 @@
 namespace ContaAPI;
 
 use PHPMailer\PHPMailer\PHPMailer;
-//Load Composer's autoloader
+use ContaAPI\Classes\Criptografia;
+use ContaAPI\Classes\Recuperar;
+use ContaAPI\Classes\Entrar;
+use ContaAPI\Classes\Funcoes;
+
 require '../vendor/autoload.php';
 
 header("Access-Control-Allow-Origin: *");
@@ -10,24 +14,21 @@ header("Access-Control-Allow-Headers: *");
 
 
 if(isset($_POST['email'])){
-    
-    include('classes/db.php');
-    include('classes/recuperar.class.php');
 
-    $recuperar = new Recuperar(conexao());
+    $funcoes = new Funcoes();
+    $recuperar = new Recuperar($funcoes::conexao());
     $email = $_POST['email'];
 
     $verificar = $recuperar->verificaEmail($email);
 
     if($verificar){
-        require('classes/email.func.php');
         $mailer = new PHPMailer(true);
-        $numero = seisDigitos();
+        $numero = $funcoes::seisDigitos();
         $copy = '&copy;';
         $corp = file_get_contents("emailTemplates/numeroRecuperacao.html");
         $cor=str_replace("--CODIGORENOVACAO--",$numero,$corp);
         $corpo=str_replace("--COPYRIGHT--",$copy." ".date("Y"),$cor);
-        $enviar = enviaEmail($mailer, $email, "Recuperação de palavra passe", $corpo);
+        $enviar = $funcoes::enviaEmail($mailer, $email, "Recuperação de palavra passe", $corpo);
 
         if($enviar){
             $recuperar->selecionaNumeroDeRecuperacao($email, $numero);

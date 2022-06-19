@@ -1,18 +1,16 @@
 <?php
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-
 namespace ContaAPI;
 
+use ContaAPI\Classes\Recuperar;
+use ContaAPI\Classes\Funcoes;
 
 require '../vendor/autoload.php';
 
 if(isset($_POST['email'])){
-    include('classes/db.php');
-    include('classes/recuperar.class.php');
 
-    $recuperar = new Recuperar(conexao());
+    $funcoes = new Funcoes();
+    $recuperar = new Recuperar($funcoes::conexao());
+
     $email = $_POST['email'];
     $numero = $_POST['numero'];
 

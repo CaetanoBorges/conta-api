@@ -1,15 +1,18 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-
 namespace ContaAPI;
+
+use ContaAPI\Classes\Criptografia;
+use ContaAPI\Classes\Recuperar;
+use ContaAPI\Classes\Entrar;
+use ContaAPI\Classes\Funcoes;
+
 require '../vendor/autoload.php';
 
 if(isset($_POST['email'])){
-    include('classes/db.php');
-    include('classes/recuperar.class.php');
+    
+    $funcoes = new Funcoes();
+    $recuperar = new Recuperar($funcoes::conexao());
 
-    $recuperar = new Recuperar(conexao());
     $email = $_POST['email'];
     $numero = $_POST['numero'];
     $palavra_passe = $_POST['palavra_passe'];
@@ -24,17 +27,15 @@ if(isset($_POST['email'])){
     $verificar = $recuperar->novaPasse($email,$numero, $palavra_passe);
 
     if($verificar){
-        include("classes/cript.class.php");
-        include("classes/entra.class.php");
 
-        $init = new Entrar(conexao(), $_POST['email'], $_POST['palavra_passe']);
+        $init = new Entrar($funcoes::conexao(), $_POST['email'], $_POST['palavra_passe']);
         if($init->login()){
             $credencial['user']=$init->getUser();
             $credencial['email']=$init->getEmail();
 
             $credencial = json_encode($credencial);
             
-            $cript = new criptografia();
+            $cript = new Criptografia();
             $chave_sms_real = $cript->fazChave();
             $chave_sms = $cript->criptChave($chave_sms_real);
 

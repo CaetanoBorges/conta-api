@@ -2,6 +2,14 @@
 namespace ContaAPI\Classes;
 
 class Funcoes{
+    static function Tokeniza ($str){
+        $res = valid($str);
+        if(gettype($res) == "array"){
+            return true;
+        }else{
+            return false;
+        }
+    }
     static function valid($token){
         $token = explode(".",$token);
     

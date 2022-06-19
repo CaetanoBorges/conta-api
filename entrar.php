@@ -1,28 +1,31 @@
 <?php
 namespace ContaAPI;
+
+use ContaAPI\Classes\Criptografia;
+use ContaAPI\Classes\Entrar;
+use ContaAPI\Classes\Funcoes;
+
 require '../vendor/autoload.php';
 
 if(isset($_POST['json'])){
-    include("classes/entra.class.php");
-    include("classes/db.php");
+    $funcoes = new Funcoes();
 
     $json = (array) json_decode($_POST['json']);
     $email = $json['email'];
     $palavra_passe = $json['palavra_passe'];
-    $conexao = conexao();
+    $conexao = $funcoes::conexao();
 
 
     $init = new Entrar($conexao, $email, $palavra_passe);
     
 
     if($init->login()){
-        include("classes/cript.class.php");
         $credencial['user']=$init->getUser();
         $credencial['email']=$init->getEmail();
 
         $credencial = json_encode($credencial);
         
-        $cript = new criptografia();
+        $cript = new Criptografia();
         $chave_sms_real = $cript->fazChave();
         $chave_sms = $cript->criptChave($chave_sms_real);
 

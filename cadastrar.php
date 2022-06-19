@@ -2,14 +2,10 @@
 namespace ContaAPI;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use ContaAPI\classes\criptografia;
-use function ContaAPI\classes\chaveDB;
-use function ContaAPI\classes\data;
-use ContaAPI\classes\Cadastrar;
-use function ContaAPI\classes\conexao;
-use ContaAPI\classes\Entrar;
-use function ContaAPI\classes\seisDigitos;
-use function ContaAPI\classes\enviaEmail;
+use ContaAPI\Classes\Criptografia;
+use ContaAPI\Classes\Cadastrar;
+use ContaAPI\Classes\Entrar;
+use ContaAPI\Classes\Funcoes;
 
 //Load Composer's autoloader
 require '../vendor/autoload.php';
@@ -17,8 +13,9 @@ require '../vendor/autoload.php';
 
 if(isset($_POST["json"])){
     
+    $funcoes = new Funcoes();
 
-    $conexao = conexao();
+    $conexao = $funcoes::conexao();
     $json = $_POST["json"];
     $array = (array) json_decode($json);
     /* ARRAY FIELDS
@@ -33,7 +30,7 @@ if(isset($_POST["json"])){
     $array['telefone'] = $_POST['telefone'];
     */
     #var_dump($array);
-    $init = new Cadastrar($conexao,$array);
+    $init = new Cadastrar($conexao,$array, $funcoes);
     
 
     if($init->cadastrar()){
@@ -44,7 +41,7 @@ if(isset($_POST["json"])){
             $copy = '&copy;';
             $corp = file_get_contents("emailTemplates/boasVindas.html");
             $corpo=str_replace("--COPYRIGHT--",$copy." ".date("Y"),$corp);
-            $enviar = enviaEmail($mailer, $array['email'], "Seja benvindo/a, Binga.", $corpo);
+            $enviar = $funcoes::enviaEmail($mailer, $array['email'], "Seja benvindo/a, Binga.", $corpo);
 
 
             $credencial['user']=$init->getUser();
