@@ -1,4 +1,7 @@
 <?php
+namespace ContaAPI;
+require '../vendor/autoload.php';
+
 if(isset($_POST['json'])){
     include("classes/entra.class.php");
     include("classes/db.php");

@@ -1,14 +1,22 @@
 <?php
+namespace ContaAPI;
+
 use PHPMailer\PHPMailer\PHPMailer;
+use ContaAPI\classes\criptografia;
+use function ContaAPI\classes\chaveDB;
+use function ContaAPI\classes\data;
+use ContaAPI\classes\Cadastrar;
+use function ContaAPI\classes\conexao;
+use ContaAPI\classes\Entrar;
+use function ContaAPI\classes\seisDigitos;
+use function ContaAPI\classes\enviaEmail;
+
 //Load Composer's autoloader
 require '../vendor/autoload.php';
 
 
 if(isset($_POST["json"])){
     
-    include("classes/cript.class.php");
-    include("classes/cadastra.class.php");
-    include("classes/db.php");
 
     $conexao = conexao();
     $json = $_POST["json"];
@@ -29,11 +37,9 @@ if(isset($_POST["json"])){
     
 
     if($init->cadastrar()){
-        include("classes/entra.class.php");
 
         $init = new Entrar($conexao, $array['email'], $array['palavra_passe']);
         if($init->login()){
-            require('classes/email.func.php');
             $mailer = new PHPMailer(true);
             $copy = '&copy;';
             $corp = file_get_contents("emailTemplates/boasVindas.html");
@@ -46,7 +52,7 @@ if(isset($_POST["json"])){
 
             $credencial = json_encode($credencial);
             
-            $cript = new criptografia();
+            $cript = new Criptografia();
             $chave_sms_real = $cript->fazChave();
             $chave_sms = $cript->criptChave($chave_sms_real);
 

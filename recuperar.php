@@ -1,4 +1,6 @@
 <?php
+namespace ContaAPI;
+
 use PHPMailer\PHPMailer\PHPMailer;
 //Load Composer's autoloader
 require '../vendor/autoload.php';

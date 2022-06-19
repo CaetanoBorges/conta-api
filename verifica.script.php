@@ -1,4 +1,8 @@
 <?php
+
+namespace ContaAPI;
+require '../vendor/autoload.php';
+
 include("classes/cript.class.php");
 include("classes/valid.func.php");
 

@@ -2,6 +2,8 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 
+namespace ContaAPI;
+require '../vendor/autoload.php';
 
 if(isset($_POST['email'])){
     include('classes/db.php');

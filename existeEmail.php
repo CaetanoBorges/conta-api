@@ -1,16 +1,19 @@
 <?php
+namespace ContaAPI;
+
 use PHPMailer\PHPMailer\PHPMailer;
+
+use ContaAPI\Classes\Criptografia;
+use ContaAPI\Classes\Cadastrar;
+use ContaAPI\Classes\Funcoes;
+
 //Load Composer's autoloader
 require '../vendor/autoload.php';
 
 
 if(isset($_POST["json"])){
-    
-    include("classes/cript.class.php");
-    include("classes/cadastra.class.php");
-    include("classes/db.php");
-
-    $conexao = conexao();
+    $funcoes = new Funcoes();
+    $conexao = $funcoes::conexao();
     $json = $_POST["json"];
     $array = (array) json_decode($json);
     /* ARRAY FIELDS
