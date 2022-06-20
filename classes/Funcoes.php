@@ -3,7 +3,7 @@ namespace ContaAPI\Classes;
 
 class Funcoes{
     static function Tokeniza ($str){
-        $res = valid($str);
+        $res = self::valid($str);
         if(gettype($res) == "array"){
             return true;
         }else{

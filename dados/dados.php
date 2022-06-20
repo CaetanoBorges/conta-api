@@ -1,27 +1,37 @@
 <?php
-//echo $_GET['objecto'] ;
-if(isset($_GET['objecto'])){
 
-    include("../verifica.script.php");
+use ContaAPI\Classes\Criptografia;
+use ContaAPI\Classes\Funcoes;
+
+require '../../vendor/autoload.php';
+
+if(isset($_GET['token'])){
+
+    $TOKEN = str_replace(" ","+",$_GET['token']);
     
-    if(tokeniza($_GET['objecto']) ){
-        include("../classes/db.php");
+    $funcoes = new Funcoes();
+    
+    if($funcoes::tokeniza($TOKEN)){
 
-        $conexao = conexao();
+        $conexao = $funcoes::conexao();
 
-        $acesso = valid($_GET['objecto']);
+        $acesso = $funcoes::valid($TOKEN);
       
         $query = $conexao->prepare("SELECT * FROM conta WHERE chave = ?");
         $query->bindValue(1, $acesso['user']);
         $query->execute();
         $re = $query->fetch();
-     
-        echo json_encode($re);
+
+        $return['payload'] = json_encode($re);
+        $return['ok'] = true;
+
+        echo json_encode($return);
 
     }else{
-        echo "Erro";
+        $return['payload'] = "Erro";
+        $return['ok'] = false;
 
-
+        echo json_encode($return);
 
     }
 
