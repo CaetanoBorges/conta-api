@@ -6,10 +6,10 @@ use ContaAPI\Classes\Funcoes;
 require '../../vendor/autoload.php';
 
 if(isset($_GET['token'])){
-
-    $TOKEN = str_replace(" ","+",$_GET['token']);
     
     $funcoes = new Funcoes();
+
+    $TOKEN = $funcoes::substituiEspacoPorMais($_GET['token']);
     
     if($funcoes::tokeniza($TOKEN)){
 
