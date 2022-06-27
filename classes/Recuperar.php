@@ -46,7 +46,7 @@ class Recuperar
         }else{
             return false;
         }
-    }
+    } 
 
     public function resetCodigoRenovacao($email, $codigo){
         $stmt = $this->db->prepare('UPDATE conta SET codigo_renova = ? WHERE email = ? and codigo_renova = ?');
@@ -56,7 +56,20 @@ class Recuperar
         $stmt->execute();
     
     }
-
+    public function pegaPalavraPasseEsquecida($email){
+        $query = $this->db->prepare("SELECT * FROM conta WHERE email = ?");
+        $query->bindValue(1, $email);
+        $query->execute();
+        $res= $query->fetch();
+        return $res['palavra_passe'];
+    }
+    public function atualizaHistoricoPalavraPasse($user,$passAtual){
+        $query = $this->db->prepare("INSERT INTO historicopalavrapasse (chave_user, palavra_passe, quando) VALUES (?, ?, ?)");
+        $query->bindValue(1, $user);
+        $query->bindValue(2, $passAtual);
+        $query->bindValue(3, time());
+        $query->execute();
+    }
     public function novaPasse($email, $codigo, $palavra_passe)
     {
         $stmt = $this->db->prepare('UPDATE conta SET palavra_passe = ? WHERE email = ? and codigo_renova = ?');

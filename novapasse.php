@@ -23,7 +23,8 @@ if(isset($_POST['email'])){
         echo json_encode($return);
         return;
     }
-    
+
+    $passAtual = $recuperar->pegaPalavraPasseEsquecida($email);
     $verificar = $recuperar->novaPasse($email,$numero, $palavra_passe);
 
     if($verificar){
@@ -32,6 +33,9 @@ if(isset($_POST['email'])){
         if($init->login()){
             $credencial['user']=$init->getUser();
             $credencial['email']=$init->getEmail();
+
+
+            $recuperar->atualizaHistoricoPalavraPasse($credencial['user'],$passAtual);
 
             $credencial = json_encode($credencial);
             

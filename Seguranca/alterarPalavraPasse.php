@@ -19,11 +19,8 @@ if(isset($_POST['token'])){
         $conexao = $funcoes::conexao();
         $acesso = $funcoes::valid($TOKEN);
 
-        $query = $conexao->prepare("SELECT * FROM conta WHERE chave = ?");
-        $query->bindValue(1, $acesso['user']);
-        $query->execute();
-        $res= $query->fetch();
-        $passAtual = $res['palavra_passe'];
+        $passAtual = $recuperar->pegaPalavraPasseEsquecida($acesso['email']);
+
         $antiga = hash("sha512",$_POST['antiga']);
 
         $nova = $_POST['nova'];  
@@ -48,11 +45,7 @@ if(isset($_POST['token'])){
 
         if($verificar){
 
-            $query = $conexao->prepare("INSERT INTO historicopalavrapasse (chave_user, palavra_passe, quando) VALUES (?, ?, ?)");
-            $query->bindValue(1, $acesso['user']);
-            $query->bindValue(2, $passAtual);
-            $query->bindValue(3, time());
-            $query->execute();
+            $recuperar->atualizaHistoricoPalavraPasse($acesso['user'],$passAtual);
 
             $return['payload'] = "Alterou a palavra passe";
             $return['ok'] = true;
