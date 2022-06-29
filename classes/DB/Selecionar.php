@@ -6,6 +6,12 @@ class Selecionar
 {
 
     private $query = "";
+    private $pdo;
+    public function __construct($pdo)
+    {
+        $this->pdo=$pdo;
+    }
+
 
     public function select(array $fields = [])
     {
@@ -52,5 +58,16 @@ class Selecionar
     public function getQuery()
     {
         return $this->query;
+    }
+
+    public function pegaResultado(){
+        $statement = $this->pdo->prepare($this->getQuery());
+        $statement->execute();
+        return $statement->fetch();
+    }
+    public function pegaResultados(){
+        $statement = $this->pdo->prepare($this->getQuery());
+        $statement->execute();
+        return $statement->fetchAll();
     }
 }
