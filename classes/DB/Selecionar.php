@@ -96,6 +96,7 @@ class Selecionar
 
     public function executaQuery(){
         $statement = $this->pdo->prepare($this->getQuery());
+        var_dump($this->getQuery());
         if($statement->execute()){
             return true;
         }

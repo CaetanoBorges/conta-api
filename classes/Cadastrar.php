@@ -19,12 +19,13 @@ class Cadastrar
 
     protected function _checkEmail()
     {
-        $stmt = $this->db->prepare('SELECT * FROM conta WHERE email = ?');
-        $stmt -> bindValue(1, $this->array['email']);
-        $stmt ->execute();
-        $user = $stmt->fetch();
-        
-        if ($user) {
+        $mail = AX::attr($this->array['email']);
+
+        $res = $this->db->count("email")
+        ->from(AX::tb("conta"))
+        ->where(["email = $mail"])
+        ->pegaResultado();
+        if($res['email'] > 0){
             return true;
         }else{
             return false;
@@ -55,29 +56,29 @@ class Cadastrar
 
     public function novoUser($array)
     {
-        $stmt = $this->db->prepare('INSERT INTO conta (chave, nome, apelido, genero, dia_nascimento, mes_nascimento, ano_nascimento, telefone, email, palavra_passe, dia_entrada, mes_entrada, ano_entrada, codigo_renova, pais, provincia, municipio, bairro_rua, foto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt -> bindValue(1, $this->funcoes::chaveDB());
-        $stmt -> bindValue(2, $array['nome']);
-        $stmt -> bindValue(3, $array['apelido']);
-        $stmt -> bindValue(4, $array['genero']);
-        $stmt -> bindValue(5, $array['dia']);
-        $stmt -> bindValue(6, $array['mes']);
-        $stmt -> bindValue(7, $array['ano']);
-        $stmt -> bindValue(8, $array['telefone']);
-        $stmt -> bindValue(9, $array['email']);
-        $stmt -> bindValue(10, $this->funcoes::fazHash($array['palavra_passe']));
-        $stmt -> bindValue(11, date('d'));
-        $stmt -> bindValue(12, date('m'));
-        $stmt -> bindValue(13, date('Y'));
-        $stmt -> bindValue(14, 0);
-        $stmt -> bindValue(15, "Angola");
-        $stmt -> bindValue(16, "");
-        $stmt -> bindValue(17, "");
-        $stmt -> bindValue(18, "");
-        $stmt -> bindValue(19, "default.png");
-        
-        
-        if ($stmt ->execute()) {
+        $res = $this->db->insert("conta",
+        ["chave" => AX::attr($this->funcoes::chaveDB()), 
+        "nome" => AX::attr($array['nome']),
+        "apelido" => AX::attr($array['apelido']),
+        "genero" => AX::attr($array['genero']),
+        "dia_nascimento" => AX::attr($array['dia']),
+        "mes_nascimento" => AX::attr($array['mes']),
+        "ano_nascimento" => AX::attr($array['ano']),
+        "telefone" => AX::attr($array['telefone']),
+        "email" => AX::attr($array['email']),
+        "palavra_passe" => AX::attr($this->funcoes::fazHash($array['palavra_passe'])),
+        "dia_entrada" => AX::attr(date('d')),
+        "mes_entrada" => AX::attr(date('m')),
+        "ano_entrada" => AX::attr(date('Y')),
+        "codigo_renova" => AX::attr(0),
+        "pais" => AX::attr("Angola"),
+        "provincia" => AX::attr(" "),
+        "municipio" => AX::attr(" "),
+        "bairro_rua" => AX::attr(" "),
+        "foto" => AX::attr("default.png")])
+        ->executaQuery();
+
+        if ($res) {
             return true;
         }
         return false;
