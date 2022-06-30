@@ -4,19 +4,24 @@ namespace ContaAPI;
 use ContaAPI\Classes\Criptografia;
 use ContaAPI\Classes\Entrar;
 use ContaAPI\Classes\Funcoes;
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
 
 require '../vendor/autoload.php';
 
 if(isset($_POST['json'])){
-    $funcoes = new Funcoes();
+    $funcoes = new Funcoes(); //
 
-    $json = (array) json_decode($_POST['json']);
+    $json = (array) json_decode($_POST['json']); // JSON com {email: ..., palavra_passe:...}
     $email = $json['email'];
     $palavra_passe = $json['palavra_passe'];
-    $conexao = $funcoes::conexao();
+
+    $conexao = $funcoes::conexao(); //Pega a conexão com a base de dados
+
+    $db = new Selecionar($conexao); //Inicializa o QueryBuilder
 
 
-    $init = new Entrar($conexao, $email, $palavra_passe);
+    $init = new Entrar($db /* (QueryBuilder & PDO) */, $email, $palavra_passe);
     
 
     if($init->login()){

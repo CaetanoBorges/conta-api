@@ -5,13 +5,16 @@ use ContaAPI\Classes\Criptografia;
 use ContaAPI\Classes\Recuperar;
 use ContaAPI\Classes\Entrar;
 use ContaAPI\Classes\Funcoes;
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
 
 require '../vendor/autoload.php';
 
 if(isset($_POST['email'])){
     
     $funcoes = new Funcoes();
-    $recuperar = new Recuperar($funcoes::conexao());
+    $db = new Selecionar($funcoes::conexao()); //Inicializa o QueryBuilder
+    $recuperar = new Recuperar($db);
 
     $email = $_POST['email'];
     $numero = $_POST['numero'];
@@ -29,7 +32,7 @@ if(isset($_POST['email'])){
 
     if($verificar){
 
-        $init = new Entrar($funcoes::conexao(), $_POST['email'], $_POST['palavra_passe']);
+        $init = new Entrar($db, $_POST['email'], $_POST['palavra_passe']);
         if($init->login()){
             $credencial['user']=$init->getUser();
             $credencial['email']=$init->getEmail();

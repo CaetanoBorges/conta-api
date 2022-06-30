@@ -7,6 +7,10 @@ use ContaAPI\Classes\Cadastrar;
 use ContaAPI\Classes\Entrar;
 use ContaAPI\Classes\Funcoes;
 
+
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
+
 //Load Composer's autoloader
 require '../vendor/autoload.php';
 
@@ -14,7 +18,6 @@ require '../vendor/autoload.php';
 if(isset($_POST["json"])){
     
     $funcoes = new Funcoes();
-
     $conexao = $funcoes::conexao();
     $json = $_POST["json"];
     $array = (array) json_decode($json);
@@ -30,12 +33,13 @@ if(isset($_POST["json"])){
     $array['telefone'] = $_POST['telefone'];
     */
     #var_dump($array);
-    $init = new Cadastrar($conexao,$array, $funcoes);
-    
+    $db = new Selecionar($conexao);
+    $init = new Cadastrar($db,$array, $funcoes);
+     
 
     if($init->cadastrar()){
 
-        $init = new Entrar($conexao, $array['email'], $array['palavra_passe']);
+        $init = new Entrar($db, $array['email'], $array['palavra_passe']);
         if($init->login()){
             $mailer = new PHPMailer(true);
             $copy = '&copy;';

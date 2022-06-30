@@ -2,13 +2,16 @@
 use ContaAPI\Classes\Criptografia;
 use ContaAPI\Classes\Recuperar;
 use ContaAPI\Classes\Funcoes;
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
 
 require '../../vendor/autoload.php';
 
 if(isset($_POST['token'])){
     
     $funcoes = new Funcoes();
-    $recuperar = new Recuperar($funcoes::conexao());
+    $db = new Selecionar($funcoes::conexao()); //Inicializa o QueryBuilder
+    $recuperar = new Recuperar($db);
 
     $TOKEN = $funcoes::substituiEspacoPorMais($_POST['token']);
     
@@ -21,7 +24,7 @@ if(isset($_POST['token'])){
 
         $passAtual = $recuperar->pegaPalavraPasseEsquecida($acesso['email']);
 
-        $antiga = hash("sha512",$_POST['antiga']);
+        $antiga = $funcoes::fazHash($_POST['antiga']);
 
         $nova = $_POST['nova'];  
 

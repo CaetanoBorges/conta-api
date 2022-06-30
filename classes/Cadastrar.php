@@ -2,6 +2,8 @@
 
 namespace ContaAPI\Classes;
 
+use ContaAPI\Classes\DB\AX;
+
 class Cadastrar
 {
     protected $db;       
@@ -63,7 +65,7 @@ class Cadastrar
         $stmt -> bindValue(7, $array['ano']);
         $stmt -> bindValue(8, $array['telefone']);
         $stmt -> bindValue(9, $array['email']);
-        $stmt -> bindValue(10, hash("sha512",$array['palavra_passe']));
+        $stmt -> bindValue(10, $this->funcoes::fazHash($array['palavra_passe']));
         $stmt -> bindValue(11, date('d'));
         $stmt -> bindValue(12, date('m'));
         $stmt -> bindValue(13, date('Y'));

@@ -3,13 +3,17 @@ namespace ContaAPI;
 
 use ContaAPI\Classes\Recuperar;
 use ContaAPI\Classes\Funcoes;
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
 
 require '../vendor/autoload.php';
 
 if(isset($_POST['email'])){
 
     $funcoes = new Funcoes();
-    $recuperar = new Recuperar($funcoes::conexao());
+    $db=new Selecionar($funcoes::conexao());
+
+    $recuperar = new Recuperar($db);
 
     $email = $_POST['email'];
     $numero = $_POST['numero'];

@@ -8,16 +8,12 @@ use ContaAPI\Classes\Funcoes;
 //Load Composer's autoloader
 require '../vendor/autoload.php';
 
-$tabela = AX::tb("conta");
-$pass = AX::attr("48ecf6bdee06f82fb24cd70e23c0b4def3f9aed7c59c87ece93c4e698ac2de0956a253d55b3ab36d150d5859f3944a978012fd633d665a0fdaa6795513cb849d");
-$email = AX::attr("cbcaetanoborges@gmail.com");
+$tabela = AX::tb(time());
+$pass = AX::attr("ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b548baeae6956df346ec8c17f5ea10f35ee3cbc514797ed7ddd3145464e2a0bab413");
+$email = AX::attr("são lubas");
 
 $var = (new Selecionar(Funcoes::conexao()))
-    ->select()
-    ->from($tabela)
-    ->where(["email = $email", "palavra_passe = $pass"])
-    ->pegaResultados();
+    ->insert("historicopalavrapasse",["chave_user" => $email, "palavra_passe" => $pass, "quando" => $tabela])
+    ->executaQuery();
 
-echo "<pre>";
-print_r($var);
-echo "</pre>";
+echo $var;

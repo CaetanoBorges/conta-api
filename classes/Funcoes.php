@@ -95,4 +95,7 @@ class Funcoes{
     static function substituiEspacoPorMais($variavel){
         return str_replace(" ","+",$variavel);
     }
+    static function fazHash($valor){
+        return hash("sha512",$valor);
+    }
 }

@@ -6,6 +6,8 @@ use ContaAPI\Classes\Criptografia;
 use ContaAPI\Classes\Recuperar;
 use ContaAPI\Classes\Entrar;
 use ContaAPI\Classes\Funcoes;
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
 
 require '../vendor/autoload.php';
 
@@ -16,7 +18,9 @@ header("Access-Control-Allow-Headers: *");
 if(isset($_POST['email'])){
 
     $funcoes = new Funcoes();
-    $recuperar = new Recuperar($funcoes::conexao());
+    $db=new Selecionar($funcoes::conexao());
+
+    $recuperar = new Recuperar($db);
     $email = $_POST['email'];
 
     $verificar = $recuperar->verificaEmail($email);

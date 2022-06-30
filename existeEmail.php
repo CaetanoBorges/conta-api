@@ -6,6 +6,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use ContaAPI\Classes\Criptografia;
 use ContaAPI\Classes\Cadastrar;
 use ContaAPI\Classes\Funcoes;
+use ContaAPI\Classes\DB\Selecionar;
+use ContaAPI\Classes\DB\AX;
 
 //Load Composer's autoloader
 require '../vendor/autoload.php';
@@ -28,7 +30,8 @@ if(isset($_POST["json"])){
     $array['telefone'] = $_POST['telefone'];
     */
     #var_dump($array);
-    $init = new Cadastrar($conexao,$array);
+    $db = new Selecionar($conexao); //Inicializa o QueryBuilder
+    $init = new Cadastrar($db,$array,$funcoes);
     
 
     if($init->verificaEmail()){

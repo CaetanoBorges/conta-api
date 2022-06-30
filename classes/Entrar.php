@@ -1,6 +1,9 @@
 <?php
 namespace ContaAPI\Classes;
 
+use ContaAPI\Classes\DB\AX;
+use ContaAPI\Classes\Funcoes;
+
 class Entrar
 {
     protected $email;    
@@ -13,7 +16,7 @@ class Entrar
     {
        $this->db = $db;
        $this->email = $email;
-       $this->password = hash("sha512",$password);
+       $this->password = Funcoes::fazHash($password);
     }
 
     public function login()
@@ -27,11 +30,14 @@ class Entrar
 
     protected function _checkCredentials()
     {
-        $stmt = $this->db->prepare('SELECT * FROM conta WHERE email = ? AND palavra_passe = ? ');
-        $stmt -> bindValue(1, $this->email);
-        $stmt -> bindValue(2, $this->password);
-        $stmt ->execute();
-        $user = $stmt->fetch();
+        $pass = AX::attr($this->password);
+        $email = AX::attr($this->email);
+
+        $user = $this->db->select()
+        ->from(AX::tb("conta"))
+        ->where(["email = $email", "palavra_passe = $pass"])
+        ->pegaResultado();
+        
         if($user){
             if (count($user) > 1) {
                 $this->user = $user;

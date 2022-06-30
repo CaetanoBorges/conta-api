@@ -1,5 +1,7 @@
 <?php
 namespace ContaAPI\Classes;
+use ContaAPI\Classes\DB\AX;
+use ContaAPI\Classes\Funcoes;
 
 class Recuperar
 {
@@ -12,10 +14,13 @@ class Recuperar
 
     public function verificaEmail($email)
     {
-        $stmt = $this->db->prepare('SELECT COUNT(email) AS email FROM conta WHERE email = ?');
-        $stmt->bindValue(1, $email);
-        $stmt->execute();
-        $res = $stmt -> fetch();
+        $mail = AX::attr($email);
+
+        $res = $this->db->count("email")
+        ->from(AX::tb("conta"))
+        ->where(["email = $mail"])
+        ->pegaResultado();
+
         if($res['email'] > 0){
             return true;
         }else{
@@ -25,22 +30,30 @@ class Recuperar
 
     public function selecionaNumeroDeRecuperacao($email, $codigo)
     {
-        $stmt = $this->db->prepare('UPDATE conta SET codigo_renova = ? WHERE email = ?');
-        $stmt->bindValue(1, $codigo);
-        $stmt->bindValue(2, $email);
+        $cod = AX::attr($codigo);
+        $mail = AX::attr($email);
 
-        if ($stmt->execute()) {
+        $res = $this->db->update("conta")
+        ->set(["codigo_renova = $cod"])
+        ->where(["email = $mail"])
+        ->executaQuery();
+
+        if ($res) {
             return true;
         }
         return false;
     }
+
     public function verificaNumeroEEmail($email, $codigo)
     {
-        $stmt = $this->db->prepare('SELECT COUNT(email) AS email FROM conta WHERE email = ? and codigo_renova = ?');
-        $stmt->bindValue(1, $email);
-        $stmt->bindValue(2, $codigo);
-        $stmt->execute();
-        $res = $stmt->fetch();
+        $cod = AX::attr($codigo);
+        $mail = AX::attr($email);
+
+        $res = $this->db->count("email")
+        ->from(AX::tb("conta"))
+        ->where(["email = $mail","codigo_renova = $cod"])
+        ->pegaResultado();
+
         if($res['email'] > 0){
             return true;
         }else{
@@ -49,36 +62,48 @@ class Recuperar
     } 
 
     public function resetCodigoRenovacao($email, $codigo){
-        $stmt = $this->db->prepare('UPDATE conta SET codigo_renova = ? WHERE email = ? and codigo_renova = ?');
-        $stmt->bindValue(1, 0);
-        $stmt->bindValue(2, $email);
-        $stmt->bindValue(3, $codigo);
-        $stmt->execute();
+
+        $cod = AX::attr($codigo);
+        $mail = AX::attr($email);
+
+        $res = $this->db->update(AX::tb("conta"))
+        ->set(["codigo_renova = 0"])
+        ->where(["email = $mail","codigo_renova = $cod"])
+        ->executaQuery();
     
     }
     public function pegaPalavraPasseEsquecida($email){
-        $query = $this->db->prepare("SELECT * FROM conta WHERE email = ?");
-        $query->bindValue(1, $email);
-        $query->execute();
-        $res= $query->fetch();
+
+        $mail = AX::attr($email);
+
+        $res = $this->db->select()
+        ->from("conta")
+        ->where(["email = $mail"])
+        ->pegaResultado();
+
         return $res['palavra_passe'];
     }
     public function atualizaHistoricoPalavraPasse($user,$passAtual){
-        $query = $this->db->prepare("INSERT INTO historicopalavrapasse (chave_user, palavra_passe, quando) VALUES (?, ?, ?)");
-        $query->bindValue(1, $user);
-        $query->bindValue(2, $passAtual);
-        $query->bindValue(3, time());
-        $query->execute();
+        $us = AX::attr($user);
+        $pass = AX::attr($passAtual);
+        $time = AX::attr(time());
+
+        $res = $this->db->insert("historicopalavrapasse",["chave_user" => $us, "palavra_passe" => $pass, "quando" => $time])
+        ->executaQuery();
+
     }
     public function novaPasse($email, $codigo, $palavra_passe)
-    {
-        $stmt = $this->db->prepare('UPDATE conta SET palavra_passe = ? WHERE email = ? and codigo_renova = ?');
-        $stmt->bindValue(1, hash("sha512",$palavra_passe));
-        $stmt->bindValue(2, $email);
-        $stmt->bindValue(3, $codigo);
-        
-       
-        if($stmt->execute()){
+    {   
+        $mail = AX::attr($email);
+        $cod = AX::attr($codigo);
+        $pass = AX::attr(Funcoes::fazHash($palavra_passe));
+
+        $res = $this->db->update("conta")
+        ->set(["palavra_passe = $pass"])
+        ->where(["email = $mail","codigo_renova = $cod"])
+        ->executaQuery();
+
+        if($res){
             $this->resetCodigoRenovacao($email, $codigo);
             return true;
         }else{
@@ -88,12 +113,14 @@ class Recuperar
     
     public function alteraPasse($user, $palavra_passe)
     {
-        $stmt = $this->db->prepare('UPDATE conta SET palavra_passe = ? WHERE chave = ?');
-        $stmt->bindValue(1, hash("sha512",$palavra_passe));
-        $stmt->bindValue(2, $user);
-        
-       
-        if($stmt->execute()){
+        $us = AX::attr($user);
+        $pass = AX::attr(Funcoes::fazHash($palavra_passe));
+
+        $res = $this->db->update("conta")
+        ->set(["palavra_passe = $pass"])
+        ->where(["chave = $us"])
+        ->executaQuery();
+        if($res){
             return true;
         }else{
             return false;
