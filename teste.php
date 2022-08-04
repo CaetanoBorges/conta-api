@@ -13,7 +13,12 @@ $pass = AX::attr("ba3253876aed6bc22d4a6ff53d8406c6ad864195ed144ab5c87621b6c233b5
 $email = AX::attr("são lubas");
 
 $var = (new Selecionar(Funcoes::conexao()))
-    ->insert("historicopalavrapasse",["chave_user" => $email, "palavra_passe" => $pass, "quando" => $tabela])
+    ->insert("historicopalavrapasse",
+    [
+        "chave_user" => $email,
+        "palavra_passe" => $pass,
+        "quando" => $tabela
+    ])
     ->executaQuery();
 
 echo $var;

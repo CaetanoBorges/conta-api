@@ -23,6 +23,14 @@ class Selecionar
 
         return $this;
     }
+
+    public function delete($from)
+    {
+        $this->query = sprintf("DELETE FROM {$from} ");
+
+        return $this;
+    }
+
     public function count(string $count)
     {
         $this->query .= sprintf("SELECT COUNT({$count}) AS {$count} ");
@@ -64,13 +72,23 @@ class Selecionar
 
         return $this;
     }
+
+    public function groupBy(array $fields = [])
+    {
+        $this->query .= sprintf("GROUP BY %s ", implode(" , ", $fields));
+
+        return $this;
+    }
     public function pegaResultado(){
         $statement = $this->pdo->prepare($this->getQuery());
         $statement->execute();
+        $this->query = "";
         return $statement->fetch();
     }
     public function pegaResultados(){
+        //var_dump($this->getQuery());
         $statement = $this->pdo->prepare($this->getQuery());
+        $this->query = "";
         $statement->execute();
         return $statement->fetchAll();
     }
@@ -96,8 +114,9 @@ class Selecionar
 
     public function executaQuery(){
         $statement = $this->pdo->prepare($this->getQuery());
-        var_dump($this->getQuery());
+        //var_dump($this->getQuery());
         if($statement->execute()){
+            $this->query = "";
             return true;
         }
     }
