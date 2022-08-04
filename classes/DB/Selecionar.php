@@ -33,7 +33,7 @@ class Selecionar
 
     public function count(string $count)
     {
-        $this->query .= sprintf("SELECT COUNT({$count}) AS {$count} ");
+        $this->query .= sprintf("SELECT COUNT({$count}) AS {$count} "); 
 
         return $this;
     }
