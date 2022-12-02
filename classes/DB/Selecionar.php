@@ -52,6 +52,7 @@ class Selecionar
         return $this;
     }
 
+
     public function offset(int $offset)
     {
         $this->query .= "OFFSET {$offset} ";
