@@ -7,6 +7,9 @@ use ContaAPI\Classes\Funcoes;
 use ContaAPI\Classes\DB\Selecionar;
 use ContaAPI\Classes\DB\AX;
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+
 require '../vendor/autoload.php';
 
 if(isset($_POST['json'])){

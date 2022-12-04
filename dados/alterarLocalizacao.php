@@ -2,6 +2,9 @@
 use ContaAPI\Classes\Criptografia;
 use ContaAPI\Classes\Funcoes;
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+
 require '../../vendor/autoload.php';
 
 if(isset($_POST['token'])){

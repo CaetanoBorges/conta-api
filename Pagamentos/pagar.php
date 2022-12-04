@@ -20,28 +20,28 @@ if(isset($_POST['token'])){
         $acesso = $funcoes::valid($TOKEN);
 
         /* Pegando o nome do arquivo */
-        $nomeDaFoto = time()."-".$_FILES['foto']['name'];
+        $comprovativo = time()."-".$_FILES['comprovativo']['name'];
   
         /* Lolização do upload */
-        $localizacao = "Foto/".$nomeDaFoto;
+        $localizacao = "Comprovativo/".$comprovativo;
 
-        $query = $conexao->prepare("SELECT foto FROM conta WHERE chave = ?");
-        $query->bindValue(1, $acesso['user']);
-        $query->execute();
-        $res = $query->fetch();
+        $chave = Funcoes::chaveDB();
+        $chaveApp = $_POST['app'];
+        $tipo = $_POST['tipo'];
+        $quando = time();
         
-
-        $query = $conexao->prepare("UPDATE conta SET foto = ? WHERE chave = ?");
-        $query->bindValue(1, $nomeDaFoto);
+        $query = $conexao->prepare("INSERT INTO pagamentos (chave, chave_user, chave_app, tipo, quando, comprovativo) VALUES(?, ?, ?, ?, ?, ?)");
+        $query->bindValue(1, $chave);
         $query->bindValue(2, $acesso['user']);
+        $query->bindValue(3, $chaveApp);
+        $query->bindValue(4, $tipo);
+        $query->bindValue(5, $quando);
+        $query->bindValue(6, $comprovativo);
         $query->execute();
 
-        if($res['foto'] != "default.png"){
-            unlink("Foto/".$res['foto']);
-        }
-        move_uploaded_file($_FILES['foto']['tmp_name'], $localizacao);
+        move_uploaded_file($_FILES['comprovativo']['tmp_name'], $localizacao);
 
-        $return['payload'] = $nomeDaFoto;
+        $return['payload'] = $comprovativo;
         $return['ok'] = true;
 
         echo json_encode($return);
