@@ -7,8 +7,9 @@ header("Access-Control-Allow-Headers: *");
 
 require '../../vendor/autoload.php';
 
+
 if(isset($_POST['token'])){
-    
+  
     $funcoes = new Funcoes();
 
     $TOKEN = $funcoes::substituiEspacoPorMais($_POST['token']);
@@ -24,13 +25,12 @@ if(isset($_POST['token'])){
   
         /* Lolização do upload */
         $localizacao = "Comprovativo/".$comprovativo;
-
+        
         $chave = Funcoes::chaveDB();
         $chaveApp = $_POST['app'];
         $tipo = $_POST['tipo'];
         $quando = time();
-        
-        $query = $conexao->prepare("INSERT INTO pagamentos (chave, chave_user, chave_app, tipo, quando, comprovativo) VALUES(?, ?, ?, ?, ?, ?)");
+        $query = $conexao->prepare("INSERT INTO pagamentos (chave, chave_user, chave_app, tipo, quando, comprovativo) VALUES (?, ?, ?, ?, ?, ?)");
         $query->bindValue(1, $chave);
         $query->bindValue(2, $acesso['user']);
         $query->bindValue(3, $chaveApp);
@@ -38,7 +38,6 @@ if(isset($_POST['token'])){
         $query->bindValue(5, $quando);
         $query->bindValue(6, $comprovativo);
         $query->execute();
-
         move_uploaded_file($_FILES['comprovativo']['tmp_name'], $localizacao);
 
         $return['payload'] = $comprovativo;
