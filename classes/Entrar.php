@@ -9,7 +9,7 @@ class Entrar
     protected $email;    
     protected $password; 
 
-    protected $db;       
+    protected $db;        
     protected $user;     
 
     public function __construct($db, $email, $password) 
@@ -42,7 +42,7 @@ class Entrar
             if (count($user) > 1) {
                 $this->user = $user;
                 return true;
-            }
+            } 
         }
         return false;
     }

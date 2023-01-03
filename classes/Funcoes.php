@@ -89,7 +89,7 @@ class Funcoes{
     }
 
     static function conexao(){
-        return new \PDO("mysql:host=127.0.0.1;dbname=conta", "root", "");
+        return new \PDO("mysql:host=localhost;dbname=bingaao_conta", "bingaao_bingaao", "qwertyazerty2022");
     }
 
     static function substituiEspacoPorMais($variavel){
@@ -97,5 +97,9 @@ class Funcoes{
     }
     static function fazHash($valor){
         return hash("sha512",$valor);
+    }
+    static function quando($quando){
+        date_default_timezone_set("Africa/Luanda");
+        return date("d-m-Y H:i:s A",$quando);
     }
 }
