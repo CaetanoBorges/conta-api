@@ -2,6 +2,9 @@
 namespace ContaAPI\Classes;
 
 class Funcoes{
+    public static $conexao = null;
+
+
     static function Tokeniza ($str){
         $res = self::valid($str);
         if(gettype($res) == "array"){
@@ -88,9 +91,17 @@ class Funcoes{
         return $data;
     }
 
-    static function conexao(){
-        return new \PDO("mysql:host=localhost;dbname=bingaao_conta", "bingaao_bingaao", "qwertyazerty2022");
-    }
+    static function conexao()
+	{
+		
+		if(isset(self::$conexao)){
+			return self::$conexao;
+		}
+
+		self::$conexao = new \PDO("mysql:host=localhost;dbname=bingaao_conta", "bingaao_bingaao", "qwertyazerty2022");
+		return self::$conexao;
+
+	}
 
     static function substituiEspacoPorMais($variavel){
         return str_replace(" ","+",$variavel);
